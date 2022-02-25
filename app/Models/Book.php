@@ -8,7 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Book extends Model
 {
     use HasFactory;
-
+    protected $fillable = [
+        'patient_id', 
+        'clinic_id' ,
+        'doctor_id', 
+        'dov', 
+        'book_time',
+        'status' ,
+    ];
     public function doctor()
     {
         return $this->hasOne(Doctor::class);

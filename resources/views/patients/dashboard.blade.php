@@ -2,25 +2,6 @@
 
 @section('content')
     <div class="container">
-      <div class="row justify-content-center">
-          <div class="col-md-8">
-              <div class="card">
-                  <div class="card-header">{{ __('Dashboard') }}</div>
-
-                  <div class="card-body">
-                      @if (session('status'))
-                          <div class="alert alert-success" role="alert">
-                              {{ session('status') }}
-                          </div>
-                      @endif
-
-                      {{ __('You are logged in!') }}
-                  </div>
-              </div>
-          </div>
-      </div>
-    </div>
-    <div class="container">
         <div class="container">
             <div class="main-body">
                   <div class="row gutters-sm">
@@ -78,7 +59,7 @@
                           <hr>
                           <div class="row">
                             <div class="col-sm-12">
-                              <a class="btn btn-info " target="__blank" href="#">Edit</a>
+                              <a class="btn btn-info " href="/patients/{{$patient_details->id}}/edit">Edit</a>
                             </div>
                           </div>
                         </div>
@@ -90,32 +71,34 @@
                               <table class="table table-sm">
                                   <thead>
                                     <tr>
-                                      <th scope="col">#</th>
-                                      <th scope="col">First</th>
-                                      <th scope="col">Last</th>
-                                      <th scope="col">Handle</th>
+                                      <th scope="col"></th>
+                                      <th scope="col">Date</th>
+                                      <th scope="col">Doctor</th>
+                                      <th scope="col">Clinic</th>
+                                      <th scope="col">Status</th>
+                                      <th scope="col"></th>
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    <tr>
-                                      <th scope="row">1</th>
-                                      <td>Mark</td>
-                                      <td>Otto</td>
-                                      <td>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                      <th scope="row">2</th>
-                                      <td>Jacob</td>
-                                      <td>Thornton</td>
-                                      <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                      <th scope="row">3</th>
-                                      <td colspan="2">Larry the Bird</td>
-                                      <td>@twitter</td>
-                                    </tr>
+                                    
+                                      @if (count($appointment_details) > 0)
+                                      @foreach ($appointment_details as $row)
+                                      <tr>
+                                        <td>{{$row->id}}</td>
+                                        <td>{{$row->dov}}</td>
+                                        <td>{{$row->Fname}} {{$row->Sname}}</td>
+                                        <td>{{$row->name}}</td>
+                                        <td>{{$row->status}}</td>
+
+                                      </tr>
+                                      @endforeach
+                                      @else
+                                      <p>No Apointments Found</p>
+                                      @endif
+
                                   </tbody>
                                 </table>
+                                <a href="{{ route('appointment') }}" class="btn btn-primary">Make Appointment</a>
                           </div>
                         </div>
                       </div>
@@ -128,30 +111,25 @@
                                 <table class="table table-sm">
                                     <thead>
                                       <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">First</th>
-                                        <th scope="col">Last</th>
-                                        <th scope="col">Handle</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Doctor</th>
+                                        <th scope="col">Clinic</th>
+                                        <th scope="col">Status</th>
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                      </tr>
-                                      <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                      </tr>
-                                      <tr>
-                                        <th scope="row">3</th>
-                                        <td colspan="2">Larry the Bird</td>
-                                        <td>@twitter</td>
-                                      </tr>
+                                      @if (count($appointment_done) > 0)
+                                      @foreach ($appointment_done as $row)
+                                        <tr>
+                                          <td>{{$row->dov}}</td>
+                                          <td>{{$row->Fname}} {{$row->Sname}}</td>
+                                          <td>{{$row->name}}</td>
+                                          <td>{{$row->status}}</td>
+                                        </tr>
+                                      @endforeach
+                                      @else
+                                      <p>No Apointments Found</p>
+                                      @endif
                                     </tbody>
                                   </table>
                             </div>

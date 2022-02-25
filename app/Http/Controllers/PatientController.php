@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Hash;
 use Session;
 use App\Models\Patient;
+use App\Models\Book;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class PatientController extends Controller
@@ -25,8 +27,26 @@ class PatientController extends Controller
         //
         $patient_id = Auth::id();
 
-       $patient_details = Patient::find($patient_id);
-        return view('patients.dashboard')->with('patient_details', $patient_details);;
+        $patient_details = Patient::find($patient_id);
+
+        $appointment_details = DB::table('books')
+        ->select('*')
+        ->where('status','=', 'pending')
+        ->join('doctors', 'doctors.id', '=', 'books.doctor_id')
+        ->join('clinics', 'clinics.id', '=', 'books.clinic_id')
+        ->get();
+        $appointment_done = DB::table('books')
+        ->select('*')
+        ->where('status','!=', 'pending')
+        ->join('doctors', 'doctors.id', '=', 'books.doctor_id')
+        ->join('clinics', 'clinics.id', '=', 'books.clinic_id')
+        ->get();
+        
+
+        return view('patients.dashboard')
+        ->with('patient_details', $patient_details)
+        ->with('appointment_details', $appointment_details)
+        ->with('appointment_done', $appointment_done);
     }
 
     /**
@@ -78,7 +98,12 @@ class PatientController extends Controller
     public function edit($id)
     {
         //
+        $patient_details = Patient::find($id);
+        return view('patients.edit')
+        ->with('patient_details', $patient_details);
     }
+
+
 
     /**
      * Update the specified resource in storage.
@@ -89,7 +114,27 @@ class PatientController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //validation
+        $this->validate($request,[
+            'Fname' =>'required',
+            'Sname' =>'required',
+            'birth_date' =>'required',
+            'gender' =>'required',
+            'contact' =>'required',
+            'email' =>'required'
+        ]);
+
+        //update user details
+        $patient = Patient::find($id);
+        $patient->Fname = $request->input('Fname');
+        $patient->Sname = $request->input('Sname');
+        $patient->birth_date = $request->input('birth_date');
+        $patient->gender = $request->input('gender');
+        $patient->contact = $request->input('contact');
+        $patient->email = $request->input('email');
+        $patient->save();
+
+        return redirect('/patients')->with('success','Profile Updated'); 
     }
 
     /**

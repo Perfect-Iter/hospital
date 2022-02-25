@@ -19,7 +19,6 @@ class CreateDoctorsTable extends Migration
             $table->string('Sname');
             $table->date('birth_date');
             $table->string('gender');
-            $table->string('password');
             $table->integer('contact');
             $table->string('address');
             $table->integer('experience');

@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
+use Carbon\Carbon;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
@@ -16,6 +17,21 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->call(function () {
+
+            $appointment_records = Book::all();
+            $now = Carbon::now();
+            
+            foreach ($appointment_records as $row) {
+
+                if($row->dov > $now){
+                    $row->status = "overdue";
+                    $row->save();
+                }
+            }
+        })->daily();
+
+
     }
 
     /**
